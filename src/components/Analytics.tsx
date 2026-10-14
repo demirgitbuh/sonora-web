@@ -27,6 +27,7 @@ export function AnalyticsProvider({ children }: { children: ReactNode }) {
     window.sc_invisible = 1;
     const script = document.createElement('script');
     script.id = 'statcounter-script';
+    script.type = 'text/javascript';
     script.src = 'https://www.statcounter.com/counter/counter.js';
     script.async = true;
     document.head.appendChild(script);

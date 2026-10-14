@@ -57,7 +57,7 @@ Kullanıcı Vercel bağlantısını hesabından yapmayı seçti.
 
 ## Statcounter
 
-Kullanıcının sağladığı Statcounter kodundaki **13359932** proje kimliği ve **6a134e35** site güvenlik kodu `src/config.ts` içinde yapılandırılmıştır. Ek Vercel değişkeni girmeden entegrasyon hazırdır. Kullanıcı Statcounter proje adresini `http://sonoravc.vercel.app` olarak güncelledi; yayın sonrası HTTPS adresinin kullanılması önerilir.
+Kullanıcının son sağladığı, **https://sonoravc.vercel.app/** adresine ait Statcounter kodundaki **13359932** proje kimliği ve **6a134e35** site güvenlik kodu `src/config.ts` içinde yapılandırılmıştır. Sayaç `sc_invisible=1` ile çalışır; `https://www.statcounter.com/counter/counter.js` betiği `text/javascript` türünde ve asenkron yüklenir. Ek Vercel değişkeni girmeden entegrasyon hazırdır.
 
 İstersen Vercel → Project → Settings → Environment Variables alanından varsayılanları değiştirebilirsin:
 

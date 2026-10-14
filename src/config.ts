@@ -6,7 +6,8 @@ export const WEBSITE_REPO = 'https://github.com/demirgitbuh/sonora-web';
 export const SITE_URL = 'https://sonoravc.vercel.app';
 export const RELEASE_API = 'https://api.github.com/repos/demirgitbuh/SonoraSoundRecorder/releases/latest';
 
-// Public browser-side identifiers supplied in the owner's Statcounter snippet.
+// Default Statcounter code for Sonora https://sonoravc.vercel.app/
+// Public browser-side identifiers supplied in the owner's latest Statcounter snippet.
 // These are website tracking identifiers, not account credentials.
 export const STATCOUNTER = { project: '13359932', security: '6a134e35' } as const;
 
