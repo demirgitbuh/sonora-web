@@ -3,7 +3,7 @@ import { Link, NavLink, Outlet, useLocation } from 'react-router-dom';
 import { ArrowDown, ArrowUpRight, ChevronDown, Globe2, Menu, Moon, Sun, X } from 'lucide-react';
 import { languages, useI18n } from '../i18n';
 import type { Language } from '../i18n/types';
-import { ISSUES_URL, PRODUCT_REPO, RELEASES_URL, WEBSITE_REPO } from '../config';
+import { ISSUES_URL, PRODUCT_REPO, RELEASES_URL, SITE_URL, WEBSITE_REPO } from '../config';
 import { readPreference, writePreference } from '../lib/storage';
 import { Brand, ExternalLink } from './Shared';
 import { AnalyticsBanner } from './Analytics';
@@ -84,6 +84,8 @@ function PageEffects() {
     document.querySelector('meta[name="description"]')?.setAttribute('content', t.meta.description);
     document.querySelector('meta[property="og:title"]')?.setAttribute('content', t.meta[key]);
     document.querySelector('meta[property="og:description"]')?.setAttribute('content', t.meta.description);
+    document.querySelector('meta[property="og:url"]')?.setAttribute('content', `${SITE_URL}${pathname}`);
+    document.querySelector('link[rel="canonical"]')?.setAttribute('href', `${SITE_URL}${pathname}`);
   }, [pathname, language, t]);
   useEffect(() => {
     const frame = requestAnimationFrame(() => {

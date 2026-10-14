@@ -2,11 +2,12 @@ import { createContext, useContext, useEffect, useState, type ReactNode } from '
 import { Link } from 'react-router-dom';
 import { useI18n } from '../i18n';
 import { readPreference, writePreference } from '../lib/storage';
+import { STATCOUNTER } from '../config';
 
 type Choice = 'accepted' | 'rejected' | null;
-const project = import.meta.env.VITE_STATCOUNTER_PROJECT?.trim() ?? '';
-const security = import.meta.env.VITE_STATCOUNTER_SECURITY?.trim() ?? '';
-export const analyticsConfigured = /^\d+$/.test(project) && /^[a-zA-Z0-9]+$/.test(security);
+const project = import.meta.env.VITE_STATCOUNTER_PROJECT?.trim() || STATCOUNTER.project;
+const security = import.meta.env.VITE_STATCOUNTER_SECURITY?.trim() || STATCOUNTER.security;
+export const analyticsConfigured = import.meta.env.VITE_STATCOUNTER_ENABLED !== 'false' && /^\d+$/.test(project) && /^[a-zA-Z0-9]+$/.test(security);
 const Context = createContext<{ choice: Choice; choose: (choice: Exclude<Choice, null>) => void; blocked: boolean } | null>(null);
 
 declare global {

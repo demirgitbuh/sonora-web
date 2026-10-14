@@ -6,6 +6,8 @@ Sonora Sound Recorder için altı dilli tanıtım ve indirme sitesi. React + Typ
 
 **Site kaynakları:** https://github.com/demirgitbuh/sonora-web
 
+**Seçilen Vercel adresi:** https://sonoravc.vercel.app (Vercel'de kullanıcı tarafından bağlanacak).
+
 ## Sayfalar
 
 - `/`: ortalanmış tanıtım, kullanıcı logosu, dekoratif ses dalgası, ürün hedefleri, formatlar, yerel kullanım, SSS.
@@ -48,25 +50,26 @@ Kullanıcı Vercel bağlantısını hesabından yapmayı seçti.
 2. GitHub hesabını bağla ve **demirgitbuh/sonora-web** deposunu içe aktar.
 3. Framework: **Vite**, Root Directory: depo kökü, Node.js: **24.x**.
 4. `vercel.json` derleme komutunu ve çıktı dizinini tanımlar: `npm run typecheck && npm run build`, `dist`.
-5. **Deploy** seç. Vercel'in verdiği `.vercel.app` adresi kullanılabilir; özel alan adı gerekmiyor.
+5. Proje adı olarak **sonoravc** kullan; alan adı kullanılabilirliğini Vercel'de kontrol et. **Deploy** seç. Sitedeki canonical ve sitemap adresleri `https://sonoravc.vercel.app` olarak ayarlanmıştır. Başka bir adres verilirse `src/config.ts`, `index.html`, `public/robots.txt` ve `public/sitemap.xml` içindeki adresleri güncelle.
 6. Sonraki `main` gönderimleri bağlı Vercel projesinde otomatik yayın oluşturur.
 
 `/download`, `/help` ve `/privacy` doğrudan açılış/yenilemeleri SPA yönlendirmeleriyle desteklenir. Güvenlik başlıkları, mikrofon/kamera kapatma ve içerik politikası yapılandırılmıştır.
 
 ## Statcounter
 
-Statcounter kimlikleri kullanıcı tarafından henüz paylaşılmadı. Kimlikler boşken hiçbir Statcounter betiği yüklenmez.
+Kullanıcının sağladığı Statcounter kodundaki **13359932** proje kimliği ve **6a134e35** site güvenlik kodu `src/config.ts` içinde yapılandırılmıştır. Ek Vercel değişkeni girmeden entegrasyon hazırdır. Kullanıcı Statcounter proje adresini `http://sonoravc.vercel.app` olarak güncelledi; yayın sonrası HTTPS adresinin kullanılması önerilir.
 
-Vercel → Project → Settings → Environment Variables alanına, Statcounter'ın **siteye eklenen kodundan** şunları gir:
+İstersen Vercel → Project → Settings → Environment Variables alanından varsayılanları değiştirebilirsin:
 
 | Değişken | Statcounter kodundaki alan |
 | --- | --- |
 | `VITE_STATCOUNTER_PROJECT` | `sc_project` |
 | `VITE_STATCOUNTER_SECURITY` | `sc_security` |
+| `VITE_STATCOUNTER_ENABLED` | Site genelinde kapatmak için `false` |
 
 Bunlar istemci tarafında görünmesi gereken site kimlikleridir; hesap parolası veya erişim token'ı eklenmez. Ardından **Redeploy** gerekir; Vite değişkenleri derleme sırasında işler.
 
-Geçerli kimlikler varsa ziyaretçi tercih kartı gösterilir. Betik ancak izin verildikten sonra yüklenir. Reddetme ve tarayıcının Do Not Track tercihi dikkate alınır. Gizlilik sayfasından tercih değiştirilebilir; izin geri alınırken çalışan betiği durdurmak için sayfa yenilenir. Mevcut entegrasyon ilk tam sayfa ziyaretini sayar; SPA içi bağlantıları ayrı sayfa görüntülemesi olarak sayan bir API henüz eklenmedi.
+Geçerli kimlikler varsa ziyaretçi tercih kartı gösterilir. Betik ancak izin verildikten sonra yüklenir. Reddetme ve tarayıcının Do Not Track tercihi dikkate alınır. Gizlilik sayfasından tercih değiştirilebilir; izin geri alınırken çalışan betiği durdurmak için sayfa yenilenir. Mevcut entegrasyon ilk tam sayfa ziyaretini sayar; SPA içi bağlantıları ayrı sayfa görüntülemesi olarak sayan bir API henüz eklenmedi. CI testlerinde Statcounter ağ çağrıları taklit edilir; test ziyaretleri gerçek istatistikleri etkilemez.
 
 ## Yapı
 

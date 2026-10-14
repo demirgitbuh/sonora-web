@@ -1,9 +1,11 @@
 import { test, expect } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
-import { RELEASE_API, PRODUCT_REPO } from '../../src/config';
+import { RELEASE_API, PRODUCT_REPO, STATCOUNTER } from '../../src/config';
 
 test.beforeEach(async ({ page }) => {
   await page.route(RELEASE_API, (route) => route.fulfill({ status: 404, json: { message: 'Not Found' } }));
+  // Never send synthetic CI visits to the owner's actual analytics project.
+  await page.route(/https:\/\/[^/]*statcounter\.com\//, (route) => route.fulfill({ contentType: 'application/javascript', body: '/* analytics mocked in CI */' }));
 });
 
 test('all six languages work, persist, and fit narrow screens', async ({ page }) => {
@@ -86,13 +88,35 @@ test('blocked storage does not prevent navigation or language changes', async ({
   await expect(page.locator('h1')).toContainText('Votre prochaine prise');
 });
 
-test('no analytics is loaded without configuration, and no recording permissions are requested', async ({ page }) => {
+test('analytics only loads after consent, persists and can be revoked', async ({ page }) => {
   const requested: string[] = [];
   page.on('request', (request) => requested.push(request.url()));
   await page.goto('/privacy');
-  await expect(page.getByText('Statcounter is not configured; no analytics script is loaded.')).toBeVisible();
+  await expect(page.getByText('Statcounter is configured.', { exact: true })).toBeVisible();
   expect(requested.some((url) => url.includes('statcounter.com'))).toBe(false);
   await expect(page.locator('#statcounter-script')).toHaveCount(0);
+  await page.locator('.analytics-banner').getByRole('button', { name: 'Allow analytics', exact: true }).click();
+  await expect(page.locator('#statcounter-script')).toHaveCount(1);
+  expect(await page.evaluate(() => ({ project: window.sc_project, security: window.sc_security, invisible: window.sc_invisible }))).toEqual({ project: Number(STATCOUNTER.project), security: STATCOUNTER.security, invisible: 1 });
+  await expect.poll(() => requested.some((url) => url.includes('statcounter.com/counter/counter.js'))).toBe(true);
+  await page.reload();
+  await expect(page.locator('#statcounter-script')).toHaveCount(1);
+  await page.locator('main').getByRole('button', { name: 'Decline analytics', exact: true }).click();
+  await expect(page.getByText('Your choice: analytics declined.', { exact: true })).toBeVisible();
+  await expect(page.locator('#statcounter-script')).toHaveCount(0);
+  await page.reload();
+  await expect(page.locator('#statcounter-script')).toHaveCount(0);
+});
+
+test('Do Not Track prevents analytics even with a stored consent', async ({ page }) => {
+  await page.addInitScript(() => {
+    Object.defineProperty(navigator, 'doNotTrack', { get: () => '1' });
+    localStorage.setItem('sonora-analytics', 'accepted');
+  });
+  await page.goto('/privacy');
+  await expect(page.getByText('Your browser’s Do Not Track setting is on. Analytics stays off.')).toBeVisible();
+  await expect(page.locator('#statcounter-script')).toHaveCount(0);
+  await expect(page.locator('.analytics-banner')).toHaveCount(0);
 });
 
 test('pages are accessible and produce visual review artifacts', async ({ page }, testInfo) => {
