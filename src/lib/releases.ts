@@ -8,6 +8,15 @@ export type ReleaseState =
 
 const isRecord = (value: unknown): value is Record<string, unknown> => typeof value === 'object' && value !== null;
 
+export function getPackageLabel(name: string, labels: { installer: string; portable: string }): string {
+  const architecture = /(?:[._-])(arm64|aarch64)(?:[._-]|$)/i.test(name) ? 'arm64'
+    : /(?:[._-])(x64|x86_64|amd64)(?:[._-]|$)/i.test(name) ? 'x64' : '';
+  const format = /\.exe$/i.test(name) ? `EXE · ${/portable/i.test(name) ? labels.portable : labels.installer}`
+    : /\.dmg$/i.test(name) ? 'DMG'
+    : /\.AppImage$/i.test(name) ? 'AppImage' : 'DEB';
+  return architecture ? `${format} · ${architecture}` : format;
+}
+
 export function parseRelease(value: unknown): ReleaseState {
   if (!isRecord(value) || value.draft === true || value.prerelease === true) return { status: 'pending' };
   if (typeof value.html_url !== 'string' || !value.html_url.startsWith(`${PRODUCT_REPO}/releases/tag/`) || !Array.isArray(value.assets)) {

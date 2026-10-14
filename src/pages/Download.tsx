@@ -1,10 +1,10 @@
 import { ArrowDown, ArrowRight, ArrowUpRight, BookOpen, Check, CircleAlert, Code2, LoaderCircle, Package, RefreshCw, ShieldCheck } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { ExternalLink, PlatformIcon } from '../components/Shared';
-import { LATEST_RELEASE_URL, PRODUCT_REPO } from '../config';
+import { LATEST_RELEASE_URL, PRODUCT_REPO, RELEASES_URL } from '../config';
 import { useI18n } from '../i18n';
 import { getPlatform, platformNames, type Platform } from '../lib/platform';
-import { useRelease } from '../lib/releases';
+import { getPackageLabel, useRelease } from '../lib/releases';
 
 export function Download() {
   const { t } = useI18n();
@@ -24,12 +24,13 @@ export function Download() {
     {!selected && <p className="desktop-note">{t.download.desktopOnly}</p>}
     <div className="download-grid" id="platforms">{platforms.map((platform) => {
       const available = state.status === 'available' && state.packages[platform].length > 0;
+      const labels = state.status === 'available' ? [...new Set(state.packages[platform].map((name) => getPackageLabel(name, t.download)))] : [];
       return <article key={platform} className={`platform-card ${selected === platform ? 'platform-recommended' : ''}`}>
         <div className="platform-card-top"><div className="platform-icon"><PlatformIcon platform={platform} size={30} /></div>{selected === platform && <span className="recommendation">{t.download.recommended}</span>}</div>
         <h2>{platformNames[platform]}</h2><p className="platform-description">{t.download[platform]}</p>
-        <div className="package-types">{(platform === 'windows' ? [`EXE · ${t.download.installer}`, t.download.portable] : platform === 'mac' ? ['DMG'] : ['AppImage', 'DEB']).map((item) => <span key={item}>{item}</span>)}</div>
+        <div className="package-types">{labels.map((label) => <span key={label}>{label}</span>)}</div>
         <p className={`package-state ${available ? 'package-ready' : ''}`}>{state.status === 'loading' ? <LoaderCircle size={14} className="spin" /> : available ? <Check size={14} /> : <Package size={14} />}{state.status === 'loading' ? t.download.checking : available ? t.download.packageAvailable : state.status === 'error' ? t.download.error : t.download.packagePending}</p>
-        {available && state.status === 'available' ? <ExternalLink className="button button-primary" href={state.url}>{t.download.viewRelease}<ArrowUpRight size={16} /></ExternalLink> : <ExternalLink className="button button-secondary" href={state.status === 'error' ? LATEST_RELEASE_URL : PRODUCT_REPO}>{state.status === 'error' ? t.common.latestRelease : t.download.follow}<ArrowUpRight size={16} /></ExternalLink>}
+        {available && state.status === 'available' ? <ExternalLink className="button button-primary" href={state.url}>{t.download.viewRelease}<ArrowUpRight size={16} /></ExternalLink> : <ExternalLink className="button button-secondary" href={state.status === 'error' ? LATEST_RELEASE_URL : RELEASES_URL}>{state.status === 'error' ? t.common.latestRelease : t.download.follow}<ArrowUpRight size={16} /></ExternalLink>}
       </article>;
     })}</div>
     <p className="architecture-note">{t.download.architecture}</p>

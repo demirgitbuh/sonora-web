@@ -6,26 +6,28 @@ Sonora Sound Recorder için altı dilli tanıtım ve indirme sitesi. React + Typ
 
 **Site kaynakları:** https://github.com/demirgitbuh/sonora-web
 
-**Seçilen Vercel adresi:** https://sonoravc.vercel.app (Vercel'de kullanıcı tarafından bağlanacak).
+**Site adresi:** https://sonoravc.vercel.app
 
 ## Sayfalar
 
-- `/`: ortalanmış tanıtım, kullanıcı logosu, dekoratif ses dalgası, ürün hedefleri, formatlar, yerel kullanım, SSS.
+- `/`: ortalanmış tanıtım, kullanıcı logosu, dekoratif ses dalgası, yayımlanan özellikler, formatlar, yerel kullanım, SSS.
 - `/download`: işletim sistemi önerisi, GitHub Releases kullanılabilirlik kontrolü ve platform kartları.
 - `/help`: Windows/macOS/Linux kurulumu, ses izinleri, ilk kullanım, kısayollar ve yerel modeller.
-- `/privacy`: site veri kullanımı ve Statcounter tercihleri.
+- `/privacy`: site veri kullanımı ve Vercel Web Analytics açıklaması.
 
 English, Türkçe, Deutsch, Français, 中文 ve Русский desteklenir. Dil ilk ziyarette tarayıcıdan belirlenir; desteklenmeyen dillerde İngilizce kullanılır. Dil ve tema tercihleri yerel depolamada saklanır. İlk tema sistemden alınır. Fontlar internet font servisinden değil siteyle birlikte sunulur. Çince için işletim sisteminin yerel Çince fontuna düşülür.
 
 ## Mevcut ürün durumu
 
-Site hazırlanırken uygulama deposu GitHub üzerinden 404 yanıtı verdi. Kullanıcı depoyu daha sonra yayımlayacağını belirtti. Bu nedenle:
+14 Ekim 2026 tarihinde [Sonora Sound Recorder 0.1](https://github.com/demirgitbuh/SonoraSoundRecorder/releases/tag/0.1) yayını, varlık listesi ve `0.1` etiketindeki izin/model/güncelleme belgeleri incelendi. Altı dilde site içeriği bu yayına göre güncellendi.
 
-- Özellikler doğrulanmış çalışan bir sürüm gibi sunulmaz; ürün hedefi olarak açıkça etiketlenir.
-- Kurulum rehberi yayın öncesi rehberdir.
-- `src/config.ts` içindeki `FEATURES_VERIFIED` yalnızca sürüm gerçekten incelendikten sonra değiştirilmeli; rehber, SSS ve durum metinleri de birlikte güncellenmelidir.
+- Windows 10/11 x64: Setup EXE ve Portable EXE.
+- macOS 12+: Apple silicon arm64 ve Intel x64 DMG. Sistem sesi için macOS 13+ ve Ekran Kaydı izni gerekir.
+- Linux x64: AppImage ve Debian/Ubuntu DEB.
+- Yazıya çevirme: whisper.cpp GGML (`ggml-*.bin`), x64 işlemcilerde AVX2; otomatik model indirme yok.
+- Sitedeki özellik anlatımları yayımlanan uygulamanın belgelerine dayanır. Bu çalışma, gerçek mikrofon ve işletim sistemi davranışlarını bağımsız olarak test ettiği iddiasında bulunmaz; uygulamanın `docs/TESTING.md` belgesi otomatik ve manuel doğrulama kapsamını ayırır.
 - İndirme sayfası yalnızca GitHub'ın herkese açık **kararlı** en son sürümünü sorgular. Gerçek, sıfırdan büyük platform varlıkları yoksa indirme varmış gibi davranmaz.
-- EXE, DMG, AppImage ve DEB varlıkları platform bazında kontrol edilir. Paket seçimi için doğrulanmış GitHub sürüm sayfasına gidilir; sitede sürüm numarası gösterilmez.
+- EXE, DMG, AppImage ve DEB varlıkları platform bazında kontrol edilir. Yalnızca dönen paketlerin biçim ve mimarileri kartlarda gösterilir. Paket seçimi için GitHub sürüm sayfasına gidilir; sitede sürüm numarası gösterilmez.
 - Ağ hatası ve istek sınırı, henüz sürüm yayımlanmaması durumundan ayrılır; tekrar deneme düğmesi vardır.
 - Windows taşınabilir dağıtımı EXE beklenir. İleride ZIP yayımlanırsa isimlendirmeye dayalı güvenilir bir paket tanımı eklenmelidir; her ZIP dosyası taşınabilir uygulama sayılamaz.
 
@@ -44,7 +46,7 @@ Tarayıcı testlerinde GitHub yanıtları kontrollü olarak taklit edilir; bu te
 
 ## Vercel'de yayınlama
 
-Kullanıcı Vercel bağlantısını hesabından yapmayı seçti.
+Depo Vercel projesine bağlıdır. `main` gönderimleri üretim yayını oluşturur. İlk kurulum veya yeni bir projeye taşıma için:
 
 1. https://vercel.com/new adresini aç.
 2. GitHub hesabını bağla ve **demirgitbuh/sonora-web** deposunu içe aktar.
@@ -55,21 +57,13 @@ Kullanıcı Vercel bağlantısını hesabından yapmayı seçti.
 
 `/download`, `/help` ve `/privacy` doğrudan açılış/yenilemeleri SPA yönlendirmeleriyle desteklenir. Güvenlik başlıkları, mikrofon/kamera kapatma ve içerik politikası yapılandırılmıştır.
 
-## Statcounter
+## Vercel Web Analytics
 
-Kullanıcının son sağladığı, **https://sonoravc.vercel.app/** adresine ait Statcounter kodundaki **13359932** proje kimliği ve **6a134e35** site güvenlik kodu `src/config.ts` içinde yapılandırılmıştır. Sayaç `sc_invisible=1` ile çalışır; `https://www.statcounter.com/counter/counter.js` betiği `text/javascript` türünde ve asenkron yüklenir. Ek Vercel değişkeni girmeden entegrasyon hazırdır.
+`@vercel/analytics` paketinin resmî React bileşeni ortak yerleşimde bir kez yüklenir. React Router'ın `pathname` değeri `route` ve `path` olarak verildiğinden hem ilk sayfa hem site içi sayfa geçişleri sayılır. Dil/tema değişimi veya aynı sayfadaki bölüm bağlantıları yeni sayfa görüntülemesi üretmez.
 
-İstersen Vercel → Project → Settings → Environment Variables alanından varsayılanları değiştirebilirsin:
+Vercel panelinde **sonoravc → Analytics → Enable** seçeneğini etkinleştir, ardından gerekiyorsa yeniden deploy et. Hesap token'ı veya site kimliği kaynak koda eklenmez. Veri Vercel Analytics panelinde görüntülenir.
 
-| Değişken | Statcounter kodundaki alan |
-| --- | --- |
-| `VITE_STATCOUNTER_PROJECT` | `sc_project` |
-| `VITE_STATCOUNTER_SECURITY` | `sc_security` |
-| `VITE_STATCOUNTER_ENABLED` | Site genelinde kapatmak için `false` |
-
-Bunlar istemci tarafında görünmesi gereken site kimlikleridir; hesap parolası veya erişim token'ı eklenmez. Ardından **Redeploy** gerekir; Vite değişkenleri derleme sırasında işler.
-
-Geçerli kimlikler varsa ziyaretçi tercih kartı gösterilir. Betik ancak izin verildikten sonra yüklenir. Reddetme ve tarayıcının Do Not Track tercihi dikkate alınır. Gizlilik sayfasından tercih değiştirilebilir; izin geri alınırken çalışan betiği durdurmak için sayfa yenilenir. Mevcut entegrasyon ilk tam sayfa ziyaretini sayar; SPA içi bağlantıları ayrı sayfa görüntülemesi olarak sayan bir API henüz eklenmedi. CI testlerinde Statcounter ağ çağrıları taklit edilir; test ziyaretleri gerçek istatistikleri etkilemez.
+Analiz uç noktaları aynı origin altında çalışır; içerik güvenlik politikası bunlara izin verir. Gizlilik sayfası altı dilde Vercel'in toplu, çerezsiz ölçümünü açıklar. CI testleri analiz ağ isteklerini taklit eder; test ziyaretleri gerçek istatistikleri etkilemez. Dashboard'da gerçek verinin görünmesi, hesap sahibinin Analytics'i etkinleştirmesine ve gerçek ziyaretlere bağlıdır.
 
 ## Yapı
 
@@ -79,7 +73,7 @@ src/
   i18n/         Tipli altı dil sözlüğü ve dil algılama
   lib/          Sürüm doğrulama, platform algılama, güvenli depolama
   pages/        Ana sayfa, indirme, yardım ve gizlilik
-  config.ts     Depo bağlantıları ve ürün doğrulama durumu
+  config.ts     Site, depo ve model bağlantıları
   styles.css    Responsive açık/koyu tasarım
 public/         Kullanıcının SVG logosu ve robots.txt
 tests/          Birim, tarayıcı ve erişilebilirlik testleri

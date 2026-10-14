@@ -1,6 +1,5 @@
 import { ArrowDown, ArrowRight, AudioLines, Check, Circle, Folder, LockKeyhole, Mic, Plus, Scissors, ShieldCheck, Sparkles, Text, Waves } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import { FEATURES_VERIFIED } from '../config';
 import { useI18n } from '../i18n';
 import { getPlatform, platformNames } from '../lib/platform';
 import { PlatformIcon, SectionHeading, Waveform } from '../components/Shared';
@@ -34,7 +33,6 @@ export function Home() {
 
     <section id="features" className="section features-section container">
       <SectionHeading eyebrow={t.home.featureEyebrow} title={t.home.featureTitle} text={t.home.featureIntro} />
-      {!FEATURES_VERIFIED && <p className="development-note"><span className="status-dot" />{t.home.featureStatus}</p>}
       <div className="features-grid">{t.home.features.map((feature, index) => <article className="feature-card" key={feature.title}><FeatureArt index={index} /><div className="feature-copy"><span className="feature-number">0{index + 1}</span><h3>{feature.title}</h3><p>{feature.text}</p><div className="feature-detail">{feature.detail}</div></div></article>)}</div>
     </section>
 

@@ -1,8 +1,9 @@
 import { describe, expect, it } from 'vitest';
 import { dictionaries, detectLanguage, languages } from '../src/i18n';
 import { detectPlatform } from '../src/lib/platform';
-import { parseRelease } from '../src/lib/releases';
+import { getPackageLabel, parseRelease } from '../src/lib/releases';
 import { PRODUCT_REPO } from '../src/config';
+import { publishedRelease } from './fixtures/release';
 
 function stringEntries(value: unknown, prefix = ''): [string, string][] {
   if (typeof value === 'string') return [[prefix, value]];
@@ -46,6 +47,16 @@ describe('desktop recommendations', () => {
 describe('honest release availability', () => {
   const asset = (name: string) => ({ name, size: 1024, browser_download_url: `${PRODUCT_REPO}/releases/download/0.1/${name}` });
   const release = (assets: unknown[]) => ({ html_url: `${PRODUCT_REPO}/releases/tag/0.1`, assets, draft: false, prerelease: false });
+  it('identifies all published packages and displays architecture without a version number', () => {
+    const parsed = parseRelease(publishedRelease);
+    expect(parsed.status).toBe('available');
+    if (parsed.status !== 'available') throw new Error('Expected public packages');
+    expect(Object.values(parsed.packages).map((packages) => packages.length)).toEqual([2, 2, 2]);
+    const labels = { installer: 'Installer', portable: 'Portable' };
+    expect(publishedRelease.assets.map((asset) => getPackageLabel(asset.name, labels))).toEqual([
+      'EXE · Installer · x64', 'EXE · Portable · x64', 'DMG · arm64', 'DMG · x64', 'AppImage · x64', 'DEB · x64',
+    ]);
+  });
   it('does not offer downloads for source archives, empty releases or drafts', () => {
     expect(parseRelease(release([])).status).toBe('pending');
     expect(parseRelease(release([asset('source.zip')])).status).toBe('pending');

@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+import { Analytics } from '@vercel/analytics/react';
 import { Link, NavLink, Outlet, useLocation } from 'react-router-dom';
 import { ArrowDown, ArrowUpRight, ChevronDown, Globe2, Menu, Moon, Sun, X } from 'lucide-react';
 import { languages, useI18n } from '../i18n';
@@ -6,7 +7,6 @@ import type { Language } from '../i18n/types';
 import { ISSUES_URL, PRODUCT_REPO, RELEASES_URL, SITE_URL, WEBSITE_REPO } from '../config';
 import { readPreference, writePreference } from '../lib/storage';
 import { Brand, ExternalLink } from './Shared';
-import { AnalyticsBanner } from './Analytics';
 
 function LanguageSelect() {
   const { t, language, setLanguage } = useI18n();
@@ -101,10 +101,10 @@ function PageEffects() {
     });
     return () => cancelAnimationFrame(frame);
   }, [pathname, hash]);
-  return null;
+  return <Analytics route={pathname} path={pathname} />;
 }
 
 export function Layout() {
   const { t } = useI18n();
-  return <><a className="skip-link" href="#main-content">{t.common.skip}</a><PageEffects /><Header /><main id="main-content" tabIndex={-1}><Outlet /></main><Footer /><AnalyticsBanner /></>;
+  return <><a className="skip-link" href="#main-content">{t.common.skip}</a><PageEffects /><Header /><main id="main-content" tabIndex={-1}><Outlet /></main><Footer /></>;
 }
