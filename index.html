@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#F8F8FF" />
+    <meta name="description" content="Meet Sonora Sound Recorder. A thoughtfully designed, open-source desktop audio recorder in development for Windows, macOS and Linux." />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Sonora — A little clarity. A lot of possibility." />
+    <meta property="og:description" content="A quieter space for your sound. Discover the open-source desktop recorder in development for Windows, macOS and Linux." />
+    <meta property="og:site_name" content="Sonora Sound Recorder" />
+    <meta name="twitter:card" content="summary" />
+    <meta name="color-scheme" content="light dark" />
+    <link rel="icon" href="/icon.svg" type="image/svg+xml" />
+    <title>Sonora — Sound, simply.</title>
+    <script>
+      try {
+        const saved = localStorage.getItem('sonora-theme');
+        document.documentElement.dataset.theme = saved === 'light' || saved === 'dark' ? saved : matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+      } catch { document.documentElement.dataset.theme = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'; }
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
